@@ -191,10 +191,12 @@
 
                     @elseif($content->contentType->name === 'PDF')
                         @if(file_exists($content->file_path))
-                            <a href="{{ route('serve.pdf', base64_encode($content->file_path)) }}" target="_blank" class="btn-link" style="display: inline-block; margin-top: 10px; background: #e74c3c; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: 600;">
-                                📄 View PDF Document
-                            </a>
-                            <p style="font-size: 0.85em; color: #999; margin-top: 5px;">Opens curriculum design document in viewer</p>
+                            <div style="margin-top: 10px;">
+                                <iframe src="{{ route('serve.pdf', base64_encode($content->file_path)) }}" style="width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 6px;" frameborder="0"></iframe>
+                                <p style="font-size: 0.85em; color: #999; margin-top: 10px;">
+                                    <a href="{{ route('serve.pdf', base64_encode($content->file_path)) }}" target="_blank" style="color: #e74c3c; text-decoration: none;">📥 Download PDF</a>
+                                </p>
+                            </div>
                         @else
                             <p style="color: #999; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 6px; text-align: center;">🔜 Coming Soon</p>
                         @endif
