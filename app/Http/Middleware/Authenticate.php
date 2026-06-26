@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 class Authenticate
@@ -24,12 +25,16 @@ class Authenticate
             }
         }
 
-        // Redirect to learner login if trying to access learner portal
+        // Redirect to appropriate login based on guard
         if (in_array('learner', $guards)) {
             return redirect()->route('learner.login');
         }
 
-        // Default redirect
-        return redirect()->route('login');
+        // For web guard or default
+        if (Route::has('login')) {
+            return redirect()->route('login');
+        }
+
+        abort(403);
     }
 }
