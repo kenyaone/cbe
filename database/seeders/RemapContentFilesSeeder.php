@@ -47,24 +47,30 @@ class RemapContentFilesSeeder extends Seeder
             ->whereIn('contentable_id', array_values($allSubStrands))
             ->get();
 
+        // Sort mappings by pattern length (longest first = most specific)
+        uasort($mappings, function($a, $b) {
+            return strlen($b) - strlen($a);
+        });
+
         foreach ($files as $file) {
             $filename = strtolower(basename($file->file_path));
             $ext = strtolower(substr(strrchr($file->file_path, '.'), 1));
 
-            // PDFs go to first sub-strand only
-            if ($ext === 'pdf') {
-                $file->contentable_id = reset($allSubStrands);
-                $file->save();
-                continue;
-            }
-
-            // Videos and interactives: find matching sub-strand
+            // Find first (most specific) matching sub-strand
+            $found = false;
             foreach ($mappings as $filePattern => $subStrandName) {
                 if ($this->filenameMatches($filename, $filePattern) && isset($allSubStrands[$subStrandName])) {
                     $file->contentable_id = $allSubStrands[$subStrandName];
                     $file->save();
+                    $found = true;
                     break;
                 }
+            }
+
+            // If no match found, assign to first sub-strand (fallback)
+            if (!$found) {
+                $file->contentable_id = reset($allSubStrands);
+                $file->save();
             }
         }
     }
@@ -326,44 +332,44 @@ class RemapContentFilesSeeder extends Seeder
                     'listening, listen, comprehend' => 'Speaking and Listening',
                 ],
                 'Mathematics' => [
-                    'fraction, numerator, denominator, improper, mixed' => 'Fractions and decimals',
-                    'decimal, percent, percentage' => 'Fractions and decimals',
-                    'angle, angles, degree' => 'Angles',
-                    'integer, negative, positive' => 'Integers',
-                    'coordinate, plane, graph' => 'Coordinates',
-                    'transformation, rotation, reflection, translation' => 'Transformations',
-                    'area, perimeter, circumference, radius' => 'Area and perimeter',
-                    'volume, capacity, litre, cubic' => 'Volume and capacity',
+                    'fraction, numerator, denominator, improper, mixed, reciprocal' => 'Fractions and decimals',
+                    'decimal, percent, percentage, decimal' => 'Fractions and decimals',
+                    'angle, angles, degree, transversal, straight, point, parallel' => 'Angles',
+                    'integer, negative, positive, inequality, compound' => 'Integers',
+                    'coordinate, plane, graph, travel, distance' => 'Coordinates',
+                    'transformation, rotation, reflection, translation, symmetry' => 'Transformations',
+                    'area, perimeter, circumference, radius, sector, rhombus, parallelogram, trapezoid, polygon' => 'Area and perimeter',
+                    'volume, capacity, litre, cubic, cylinder, cone, sphere, cuboid' => 'Volume and capacity',
                     'addition, adding, add, sum' => 'Operations',
                     'subtraction, subtract, difference' => 'Operations',
                     'multiplication, multiply, times, product' => 'Operations',
                     'division, divide, quotient' => 'Operations',
-                    'number, counting, count, whole' => 'Whole numbers',
-                    'shape, 2d, 3d, dimension, triangle, square, circle, polygon' => '2D Shapes',
-                    'length, metre, centimetre, kilometer, mm' => 'Length and distance',
+                    'number, counting, count, whole, prime, odd, even, composite, divisibility' => 'Whole numbers',
+                    'shape, 2d, 3d, dimension, triangle, square, circle, polygon, ellipse' => '2D Shapes',
+                    'length, metre, centimetre, kilometer, mm, hectometer, decameter, conversion' => 'Length and distance',
                     'mass, weight, kilogram, gram' => 'Mass and weight',
-                    'time, clock, hour, minute, second, duration' => 'Time',
-                    'data, graph, chart, statistics, frequency' => 'Data Handling',
-                    'probability, chance, likely, possible' => 'Probability',
+                    'time, clock, hour, minute, second, duration, speed, conversion' => 'Time',
+                    'data, graph, chart, statistics, frequency, pictograph, bar, pie, table' => 'Data Handling',
+                    'probability, chance, likely, possible, outcome' => 'Probability',
                     'pattern, sequence, series' => 'Patterns',
-                    'variable, expression, equation, solve' => 'Variables and expressions',
+                    'variable, expression, equation, solve, algebraic, linear, formation' => 'Variables and expressions',
                     'function, relation' => 'Functions',
                 ],
                 'Integrated Science' => [
-                    'observation, experiment, method, procedure' => 'Scientific Investigation',
+                    'observation, experiment, method, procedure, investigation, laboratory, apparatus, safety' => 'Scientific Investigation',
                     'matter, property, physical, chemical' => 'Mixtures and Compounds',
-                    'mixture, element, compound, pure, solution' => 'Mixtures and Compounds',
+                    'mixture, element, compound, pure, solution, acid, base, indicator' => 'Mixtures and Compounds',
                     'reaction, combine, decompose' => 'Mixtures and Compounds',
-                    'cell, organism, plant, animal, living' => 'Living Things and Environment',
+                    'cell, organism, plant, animal, living, reproduction, reproductive, excretory, human' => 'Living Things and Environment',
                     'ecosystem, environment, habitat, community, species' => 'Living Things and Environment',
                     'adaptation, inherited, environment, survival' => 'Living Things and Environment',
                     'interdependence, food chain, food web, predator, prey' => 'Living Things and Environment',
-                    'force, push, pull, friction, gravity' => 'Force and Energy',
+                    'force, push, pull, friction, gravity, motion, speed, distance' => 'Force and Energy',
                     'motion, speed, velocity, acceleration' => 'Force and Energy',
                     'machine, lever, pulley, incline, wedge' => 'Force and Energy',
-                    'energy, heat, light, sound, kinetic, potential' => 'Force and Energy',
+                    'energy, heat, light, sound, kinetic, potential, temperature, kelvin' => 'Force and Energy',
                     'electricity, current, circuit, conductor, insulator' => 'Force and Energy',
-                    'magnet, magnetic, field' => 'Force and Energy',
+                    'magnet, magnetic, magnetism, field, electrical' => 'Force and Energy',
                 ],
             ],
         ];
