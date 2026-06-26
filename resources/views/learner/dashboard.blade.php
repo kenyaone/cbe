@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learner Portal - CBE Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+        }
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .grade-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: #333;
+        }
+        .grade-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .grade-card h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .grade-card p {
+            font-size: 0.95em;
+            opacity: 0.8;
+        }
+        .grade-card:hover p {
+            opacity: 1;
+        }
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Choose Your Grade Level</h1>
+            <p>Select your grade to access your subjects and lessons</p>
+        </header>
+
+        <div class="grades-grid">
+            @foreach($gradeLevels as $grade)
+                <a href="{{ route('learner.grade', $grade) }}" class="grade-card">
+                    <div class="icon">
+                        @if($grade === 'PP1')
+                            👶
+                        @elseif($grade === 'PP2')
+                            🧒
+                        @else
+                            📖
+                        @endif
+                    </div>
+                    <h2>{{ $grade }}</h2>
+                    <p>
+                        @if($grade === 'PP1')
+                            Pre-Primary 1
+                        @elseif($grade === 'PP2')
+                            Pre-Primary 2
+                        @else
+                            {{ str_replace('Grade ', '', $grade) }}
+                        @endif
+                    </p>
+                </a>
+            @endforeach
+        </div>
+
+        <div style="text-align: center; color: white; margin-top: 40px;">
+            <p style="font-size: 0.9em; opacity: 0.8;">Click on your grade to get started →</p>
+        </div>
+    </div>
+</body>
+</html>
