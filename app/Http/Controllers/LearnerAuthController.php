@@ -71,7 +71,7 @@ class LearnerAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect(route('learner.login'));
+        return redirect('/learn/login');
     }
 
     public function profile()
