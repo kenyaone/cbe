@@ -215,6 +215,26 @@ class RemapContentFilesSeeder extends Seeder
                     'data' => 'Collecting data',
                 ],
             ],
+            'Grade Four' => [
+                'English Language' => [
+                    'english, grammar, learning, game' => 'Grammar and Vocabulary',
+                ],
+                'Kiswahili Language' => [
+                    'kiswahili, gredi, learning, game' => 'Oral Skills',
+                ],
+                'Mathematics' => [
+                    'math, mathematics, secure' => 'Numbers and Operations',
+                ],
+                'Science and Technology' => [
+                    'science, agriculture, nutrition, technology' => 'Life sciences',
+                ],
+                'Christian Religious Education' => [
+                    'christian, cre' => 'God and Creation',
+                ],
+                'Creative Activities' => [
+                    'creative, arts, quiz' => 'Visual Arts',
+                ],
+            ],
         ];
     }
 }
