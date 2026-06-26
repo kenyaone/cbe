@@ -144,6 +144,14 @@
             </div>
 
             <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="Choose your login username" required>
+                @error('username')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" required>
                 @error('email')

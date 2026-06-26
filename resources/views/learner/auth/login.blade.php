@@ -139,9 +139,9 @@
             @csrf
 
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
-                @error('email')
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ old('username') }}" required autofocus>
+                @error('username')
                     <div class="error">{{ $message }}</div>
                 @enderror
             </div>

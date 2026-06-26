@@ -11,6 +11,7 @@ class Learner extends Authenticatable
 
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'grade_level',

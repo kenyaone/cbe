@@ -22,7 +22,7 @@ class LearnerAuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|min:6',
         ]);
 
@@ -33,14 +33,15 @@ class LearnerAuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'username' => 'The provided credentials do not match our records.',
+        ])->onlyInput('username');
     }
 
     public function register(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:50|unique:learners',
             'email' => 'required|string|email|max:255|unique:learners',
             'password' => 'required|string|min:6|confirmed',
             'grade_level' => 'required|string',
@@ -50,6 +51,7 @@ class LearnerAuthController extends Controller
 
         $learner = Learner::create([
             'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'grade_level' => $validated['grade_level'],
@@ -82,6 +84,7 @@ class LearnerAuthController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'username' => 'required|string|max:50|unique:learners,username,' . Auth::guard('learner')->id(),
             'email' => 'required|string|email|max:255|unique:learners,email,' . Auth::guard('learner')->id(),
             'phone' => 'nullable|string|max:20',
             'grade_level' => 'required|string',
