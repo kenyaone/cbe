@@ -66,10 +66,40 @@
             font-size: 3em;
             margin-bottom: 15px;
         }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .logout-btn:hover {
+            background: white;
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="top-bar">
+            <div></div>
+            <form method="POST" action="{{ route('learner.logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" class="logout-btn">🚪 Logout</button>
+            </form>
+        </div>
+
         <header>
             <h1>📚 Choose Your Grade Level</h1>
             <p>Select your grade to access your subjects and lessons</p>
