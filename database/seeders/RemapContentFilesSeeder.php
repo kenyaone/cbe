@@ -167,6 +167,31 @@ class RemapContentFilesSeeder extends Seeder
                     'word, recognition' => 'Word recognition',
                 ],
             ],
+            'Grade Two' => [
+                'English Language' => [
+                    'noun, nouns, singular, plural' => 'Nouns',
+                    'verb, verbs, tense, continuous' => 'Verbs',
+                    'adverb, adjective' => 'Adjectives',
+                    'preposition, position' => 'Parts of speech',
+                    'possessive, pronoun' => 'Parts of speech',
+                    'rhyming, rhyme' => 'Comprehension',
+                    'ing, adding' => 'Verbs',
+                    'transport, modes' => 'Comprehension',
+                    'shape, shapes' => 'Comprehension',
+                ],
+                'Mathematics' => [
+                    'addition, adding, add' => 'Addition',
+                    'subtraction, subtract, subtracting' => 'Subtraction',
+                    'multiplication, multiply' => 'Multiplication',
+                    'division, divide' => 'Division',
+                    'number, counting, count' => 'Number recognition',
+                    'shape, 2d, 3d' => '2D Shapes',
+                    'length, metre, centimetre' => 'Length',
+                    'mass, weight, heavy, light' => 'Mass',
+                    'capacity, litre, volume' => 'Capacity',
+                    'calendar, time, month, day, week' => 'Time and Calendar',
+                ],
+            ],
         ];
     }
 }
