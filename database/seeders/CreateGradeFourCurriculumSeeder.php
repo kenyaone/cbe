@@ -52,10 +52,11 @@ class CreateGradeFourCurriculumSeeder extends Seeder
                 'name' => 'Mathematics',
                 'code' => 'G4-MA',
                 'strands' => [
-                    ['code' => '1.0', 'name' => 'Numbers and Operations', 'subs' => ['1.1 Number recognition', '1.2 Counting', '1.3 Addition', '1.4 Subtraction', '1.5 Multiplication', '1.6 Division']],
-                    ['code' => '2.0', 'name' => 'Measurement', 'subs' => ['2.1 Length', '2.2 Mass', '2.3 Capacity', '2.4 Time', '2.5 Money']],
-                    ['code' => '3.0', 'name' => 'Geometry', 'subs' => ['3.1 2D Shapes', '3.2 3D Shapes', '3.3 Spatial relationships']],
-                    ['code' => '4.0', 'name' => 'Data handling', 'subs' => ['4.1 Collecting data', '4.2 Representing data', '4.3 Interpreting data']],
+                    ['code' => '1.0', 'name' => 'Numbers and Operations', 'subs' => ['1.1 Number recognition', '1.2 Place values', '1.3 Addition', '1.4 Subtraction', '1.5 Multiplication', '1.6 Division']],
+                    ['code' => '2.0', 'name' => 'Fractions and Decimals', 'subs' => ['2.1 Fractions', '2.2 Decimals', '2.3 Comparing fractions']],
+                    ['code' => '3.0', 'name' => 'Measurement', 'subs' => ['3.1 Length', '3.2 Mass', '3.3 Capacity', '3.4 Time', '3.5 Money']],
+                    ['code' => '4.0', 'name' => 'Geometry', 'subs' => ['4.1 2D Shapes', '4.2 3D Shapes', '4.3 Angles', '4.4 Spatial relationships']],
+                    ['code' => '5.0', 'name' => 'Data handling', 'subs' => ['5.1 Collecting data', '5.2 Representing data', '5.3 Interpreting data']],
                 ]
             ],
             [
@@ -259,13 +260,47 @@ class CreateGradeFourCurriculumSeeder extends Seeder
 
         $name = strtolower($filename);
 
+        // MOST SPECIFIC PATTERNS FIRST - Fractions and Decimals
+        if (strpos($name, 'fraction') !== false || strpos($name, 'numerator') !== false ||
+            strpos($name, 'denominator') !== false || strpos($name, 'improper') !== false ||
+            strpos($name, 'mixed') !== false) {
+            $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                $q->where('learning_area_id', $area->id)->where('name', 'Fractions and Decimals');
+            })->where('name', 'Fractions')->first();
+            if ($sub) return $sub;
+        }
+
+        if (strpos($name, 'decimal') !== false) {
+            $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                $q->where('learning_area_id', $area->id)->where('name', 'Fractions and Decimals');
+            })->where('name', 'Decimals')->first();
+            if ($sub) return $sub;
+        }
+
+        // Angles and Geometry
+        if (strpos($name, 'angle') !== false) {
+            $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                $q->where('learning_area_id', $area->id)->where('name', 'Geometry');
+            })->where('name', 'Angles')->first();
+            if ($sub) return $sub;
+        }
+
+        // Place values
+        if (strpos($name, 'place value') !== false || strpos($name, 'digit') !== false) {
+            $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                $q->where('learning_area_id', $area->id)->where('name', 'Numbers and Operations');
+            })->where('name', 'Place values')->first();
+            if ($sub) return $sub;
+        }
+
+        // Standard operations
         $mapping = [
             'addition, adding, add' => 'Addition',
             'subtraction, subtract, subtracting' => 'Subtraction',
             'multiplication, multiply, times' => 'Multiplication',
             'division, divide' => 'Division',
             'number, counting, count' => 'Number recognition',
-            'shape, 2d, 3d, geometry' => '2D Shapes',
+            'shape, 2d, 3d' => '2D Shapes',
             'length, metre, centimetre' => 'Length',
             'mass, weight, heavy, light' => 'Mass',
             'capacity, litre, volume' => 'Capacity',
