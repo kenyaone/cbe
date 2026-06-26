@@ -176,7 +176,7 @@
                             </div>
                             <p style="font-size: 0.85em; color: #999; margin-top: 5px;">💡 Tip: Use the video player controls to play, pause, and seek through the lesson.</p>
                         @else
-                            <p style="color: #e74c3c; margin-top: 10px;">⚠️ File not found: {{ $content->file_path }}</p>
+                            <p style="color: #999; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 6px; text-align: center;">🔜 Coming Soon</p>
                         @endif
 
                     @elseif($content->contentType->name === 'Interactive')
@@ -186,7 +186,7 @@
                             </a>
                             <p style="font-size: 0.85em; color: #999; margin-top: 5px;">Opens in a new window for full interaction</p>
                         @else
-                            <p style="color: #e74c3c; margin-top: 10px;">⚠️ File not found: {{ $content->file_path }}</p>
+                            <p style="color: #999; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 6px; text-align: center;">🔜 Coming Soon</p>
                         @endif
 
                     @elseif($content->contentType->name === 'PDF')
@@ -196,7 +196,7 @@
                             </a>
                             <p style="font-size: 0.85em; color: #999; margin-top: 5px;">Opens curriculum design document in viewer</p>
                         @else
-                            <p style="color: #e74c3c; margin-top: 10px;">⚠️ File not found: {{ $content->file_path }}</p>
+                            <p style="color: #999; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 6px; text-align: center;">🔜 Coming Soon</p>
                         @endif
 
                     @elseif($content->contentType->name === 'HTML')
@@ -205,7 +205,7 @@
                                 🌐 Open Interactive Content
                             </a>
                         @else
-                            <p style="color: #e74c3c; margin-top: 10px;">⚠️ File not found: {{ $content->file_path }}</p>
+                            <p style="color: #999; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 6px; text-align: center;">🔜 Coming Soon</p>
                         @endif
 
                     @elseif($content->contentType->name === 'Lesson')
