@@ -130,7 +130,7 @@ class CreateGradeFourCurriculumSeeder extends Seeder
 
     private function linkGradeFourFiles($types)
     {
-        $usbPath = '/media/tele/ARISE1/Grade Four';
+        $usbPath = '/media/tele/ARISE1/Grade Four Complete';
         $created = 0;
 
         // Scan all files
@@ -162,7 +162,7 @@ class CreateGradeFourCurriculumSeeder extends Seeder
             }
 
             $filename = basename($filePath);
-            $subStrand = $this->findGradeFourSubStrand($filename);
+            $subStrand = $this->findGradeFourSubStrand($filePath, $filename);
 
             if (!$subStrand) {
                 continue;
@@ -182,78 +182,113 @@ class CreateGradeFourCurriculumSeeder extends Seeder
         $this->command->info("Linked $created Grade Four files");
     }
 
-    private function findGradeFourSubStrand($filename)
+    private function findGradeFourSubStrand($filePath, $filename)
     {
         $gradeFour = CurriculumType::where('name', 'Grade Four')->first();
         $name = strtolower($filename);
 
-        // English/Learning games
-        if (strpos($name, 'english') !== false || strpos($name, 'grammar') !== false) {
-            $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
-                ->where('name', 'English Language')->first();
-            if ($area) {
-                return SubStrand::whereHas('strand', function($q) use ($area) {
-                    $q->where('learning_area_id', $area->id);
-                })->first();
-            }
+        // English files - map to specific sub-strands
+        if (strpos($filePath, '/Grade Four English/') !== false || strpos($name, 'english') !== false) {
+            return $this->matchEnglishSubStrand($filename, $gradeFour);
         }
 
-        // Kiswahili
-        if (strpos($name, 'kiswahili') !== false || strpos($name, 'gredi') !== false) {
-            $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
-                ->where('name', 'Kiswahili Language')->first();
-            if ($area) {
-                return SubStrand::whereHas('strand', function($q) use ($area) {
-                    $q->where('learning_area_id', $area->id);
-                })->first();
-            }
+        // Math files - map to specific sub-strands
+        if (strpos($filePath, '/Grade Four Math/') !== false || strpos($name, 'math') !== false) {
+            return $this->matchMathSubStrand($filename, $gradeFour);
         }
 
-        // Mathematics
-        if (strpos($name, 'math') !== false) {
-            $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
-                ->where('name', 'Mathematics')->first();
-            if ($area) {
-                return SubStrand::whereHas('strand', function($q) use ($area) {
-                    $q->where('learning_area_id', $area->id);
-                })->first();
-            }
-        }
-
-        // Science/Technology
-        if (strpos($name, 'science') !== false || strpos($name, 'technology') !== false || strpos($name, 'agriculture') !== false) {
-            $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
-                ->where('name', 'Science and Technology')->first();
-            if ($area) {
-                return SubStrand::whereHas('strand', function($q) use ($area) {
-                    $q->where('learning_area_id', $area->id);
-                })->first();
-            }
-        }
-
-        // Social Studies
-        if (strpos($name, 'social') !== false) {
-            $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
-                ->where('name', 'Social Studies')->first();
-            if ($area) {
-                return SubStrand::whereHas('strand', function($q) use ($area) {
-                    $q->where('learning_area_id', $area->id);
-                })->first();
-            }
-        }
-
-        // Christian Religious Education
-        if (strpos($name, 'christian') !== false || strpos($name, 'cre') !== false) {
-            $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
-                ->where('name', 'Christian Religious Education')->first();
-            if ($area) {
-                return SubStrand::whereHas('strand', function($q) use ($area) {
-                    $q->where('learning_area_id', $area->id);
-                })->first();
+        // PDFs - assign to first sub-strand of respective area
+        if (strpos($name, '.pdf') !== false) {
+            if (strpos($filename, 'KISWAHILI') !== false || strpos($filename, 'GREDI') !== false) {
+                $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
+                    ->where('name', 'Kiswahili Language')->first();
+                if ($area) {
+                    return SubStrand::whereHas('strand', function($q) use ($area) {
+                        $q->where('learning_area_id', $area->id);
+                    })->first();
+                }
             }
         }
 
         return null;
+    }
+
+    private function matchEnglishSubStrand($filename, $gradeFour)
+    {
+        $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
+            ->where('name', 'English Language')->first();
+
+        if (!$area) return null;
+
+        $name = strtolower($filename);
+
+        $mapping = [
+            'tense, continuous, past' => 'Tenses',
+            'noun, nouns, singular, plural' => 'Parts of speech',
+            'verb, verbs, action' => 'Parts of speech',
+            'adjective, adverb' => 'Parts of speech',
+            'preposition, pronoun' => 'Parts of speech',
+            'comprehension, reading' => 'Comprehension',
+            'vocabulary, word' => 'Vocabulary building',
+            'writing, essay, paragraph' => 'Writing',
+        ];
+
+        foreach ($mapping as $keywords => $subStrandName) {
+            $keywordArray = explode(', ', $keywords);
+            foreach ($keywordArray as $keyword) {
+                if (strpos($name, strtolower($keyword)) !== false) {
+                    $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                        $q->where('learning_area_id', $area->id);
+                    })->where('name', $subStrandName)->first();
+                    if ($sub) return $sub;
+                }
+            }
+        }
+
+        return SubStrand::whereHas('strand', function($q) use ($area) {
+            $q->where('learning_area_id', $area->id);
+        })->first();
+    }
+
+    private function matchMathSubStrand($filename, $gradeFour)
+    {
+        $area = LearningArea::where('curriculum_type_id', $gradeFour->id)
+            ->where('name', 'Mathematics')->first();
+
+        if (!$area) return null;
+
+        $name = strtolower($filename);
+
+        $mapping = [
+            'addition, adding, add' => 'Addition',
+            'subtraction, subtract, subtracting' => 'Subtraction',
+            'multiplication, multiply, times' => 'Multiplication',
+            'division, divide' => 'Division',
+            'number, counting, count' => 'Number recognition',
+            'shape, 2d, 3d, geometry' => '2D Shapes',
+            'length, metre, centimetre' => 'Length',
+            'mass, weight, heavy, light' => 'Mass',
+            'capacity, litre, volume' => 'Capacity',
+            'time, clock, hour, minute' => 'Time',
+            'money, shilling, coin' => 'Money',
+            'data, graph, chart' => 'Collecting data',
+        ];
+
+        foreach ($mapping as $keywords => $subStrandName) {
+            $keywordArray = explode(', ', $keywords);
+            foreach ($keywordArray as $keyword) {
+                if (strpos($name, strtolower($keyword)) !== false) {
+                    $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                        $q->where('learning_area_id', $area->id);
+                    })->where('name', $subStrandName)->first();
+                    if ($sub) return $sub;
+                }
+            }
+        }
+
+        return SubStrand::whereHas('strand', function($q) use ($area) {
+            $q->where('learning_area_id', $area->id);
+        })->first();
     }
 
     private function cleanFileName($filename)
