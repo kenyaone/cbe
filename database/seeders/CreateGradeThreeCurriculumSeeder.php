@@ -1,0 +1,304 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\CurriculumType;
+use App\Models\LearningArea;
+use App\Models\Strand;
+use App\Models\SubStrand;
+use App\Models\ContentFile;
+use App\Models\ContentType;
+
+class CreateGradeThreeCurriculumSeeder extends Seeder
+{
+    public function run()
+    {
+        // Create Grade Three curriculum type
+        $gradeThree = CurriculumType::firstOrCreate(
+            ['name' => 'Grade Three'],
+            ['description' => 'Grade Three (8-4-4 System) Curriculum']
+        );
+
+        // Get content types
+        $types = [
+            'Video' => ContentType::firstOrCreate(['name' => 'Video']),
+            'Interactive' => ContentType::firstOrCreate(['name' => 'Interactive']),
+            'PDF' => ContentType::firstOrCreate(['name' => 'PDF']),
+        ];
+
+        // Define Grade Three curriculum structure (8-4-4 system)
+        $curriculum = [
+            [
+                'name' => 'English Language',
+                'code' => 'G3-EL',
+                'strands' => [
+                    ['code' => '1.0', 'name' => 'Speaking and Listening', 'subs' => ['1.1 Listening comprehension', '1.2 Speaking clearly', '1.3 Oral expression']],
+                    ['code' => '2.0', 'name' => 'Reading', 'subs' => ['2.1 Decoding', '2.2 Comprehension', '2.3 Fluency', '2.4 Inference']],
+                    ['code' => '3.0', 'name' => 'Writing', 'subs' => ['3.1 Sentence formation', '3.2 Paragraph writing', '3.3 Letter writing']],
+                    ['code' => '4.0', 'name' => 'Grammar and Vocabulary', 'subs' => ['4.1 Parts of speech', '4.2 Tenses', '4.3 Vocabulary building']],
+                ]
+            ],
+            [
+                'name' => 'Kiswahili Language',
+                'code' => 'G3-KL',
+                'strands' => [
+                    ['code' => '1.0', 'name' => 'Oral Skills', 'subs' => ['1.1 Listening', '1.2 Speaking']],
+                    ['code' => '2.0', 'name' => 'Reading', 'subs' => ['2.1 Word recognition', '2.2 Text comprehension']],
+                    ['code' => '3.0', 'name' => 'Writing', 'subs' => ['3.1 Phonemic awareness', '3.2 Writing practice']],
+                ]
+            ],
+            [
+                'name' => 'Mathematics',
+                'code' => 'G3-MA',
+                'strands' => [
+                    ['code' => '1.0', 'name' => 'Numbers and Operations', 'subs' => ['1.1 Number recognition', '1.2 Counting', '1.3 Addition', '1.4 Subtraction', '1.5 Multiplication', '1.6 Division']],
+                    ['code' => '2.0', 'name' => 'Measurement', 'subs' => ['2.1 Length', '2.2 Mass', '2.3 Capacity', '2.4 Time', '2.5 Money']],
+                    ['code' => '3.0', 'name' => 'Geometry', 'subs' => ['3.1 2D Shapes', '3.2 3D Shapes', '3.3 Spatial relationships']],
+                    ['code' => '4.0', 'name' => 'Data handling', 'subs' => ['4.1 Collecting data', '4.2 Representing data', '4.3 Interpreting data']],
+                ]
+            ],
+            [
+                'name' => 'Environmental Activities',
+                'code' => 'G3-EA',
+                'strands' => [
+                    ['code' => '1.0', 'name' => 'Living things', 'subs' => ['1.1 Plants', '1.2 Animals', '1.3 Habitats', '1.4 Life cycles']],
+                    ['code' => '2.0', 'name' => 'Non-living things', 'subs' => ['2.1 Materials', '2.2 Weather', '2.3 Water', '2.4 Earth and beyond']],
+                ]
+            ],
+            [
+                'name' => 'Creative Activities',
+                'code' => 'G3-CA',
+                'strands' => [
+                    ['code' => '1.0', 'name' => 'Visual Arts', 'subs' => ['1.1 Drawing', '1.2 Painting', '1.3 Crafts']],
+                    ['code' => '2.0', 'name' => 'Music', 'subs' => ['2.1 Singing', '2.2 Rhythm', '2.3 Instruments']],
+                    ['code' => '3.0', 'name' => 'Dance and Drama', 'subs' => ['3.1 Movement', '3.2 Drama']],
+                ]
+            ],
+            [
+                'name' => 'Christian Religious Education',
+                'code' => 'G3-CRE',
+                'strands' => [
+                    ['code' => '1.0', 'name' => 'God and Creation', 'subs' => ['1.1 Our God', '1.2 Creation', '1.3 God\'s attributes']],
+                    ['code' => '2.0', 'name' => 'Bible', 'subs' => ['2.1 Bible stories', '2.2 Jesus and his teachings', '2.3 Parables']],
+                    ['code' => '3.0', 'name' => 'Christian Living', 'subs' => ['3.1 Values', '3.2 Relationships', '3.3 Service']],
+                ]
+            ],
+            [
+                'name' => 'Islamic Religious Education',
+                'code' => 'G3-IRE',
+                'strands' => [
+                    ['code' => '1.0', 'name' => 'Allah and the Quran', 'subs' => ['1.1 Belief in Allah', '1.2 Quranic teachings']],
+                    ['code' => '2.0', 'name' => 'Islamic practices', 'subs' => ['2.1 Salat', '2.2 Zakat', '2.3 Hajj']],
+                    ['code' => '3.0', 'name' => 'Character', 'subs' => ['3.1 Good manners', '3.2 Social responsibility']],
+                ]
+            ],
+        ];
+
+        // Create curriculum structure
+        $order = 0;
+        foreach ($curriculum as $areaData) {
+            $area = LearningArea::firstOrCreate(
+                ['curriculum_type_id' => $gradeThree->id, 'name' => $areaData['name']],
+                ['code' => $areaData['code'], 'order' => $order++, 'grade_level' => 'Grade Three']
+            );
+
+            $strandOrder = 0;
+            foreach ($areaData['strands'] as $strandData) {
+                $strand = Strand::firstOrCreate(
+                    ['learning_area_id' => $area->id, 'code' => $strandData['code']],
+                    ['name' => $strandData['name'], 'order' => $strandOrder++]
+                );
+
+                $subOrder = 0;
+                foreach ($strandData['subs'] as $subName) {
+                    list($code, $name) = explode(' ', $subName, 2);
+                    SubStrand::firstOrCreate(
+                        ['strand_id' => $strand->id, 'code' => $code],
+                        ['name' => $name, 'order' => $subOrder++]
+                    );
+                }
+            }
+        }
+
+        $this->command->info('Grade Three curriculum structure created');
+
+        // Link Grade Three files from USB
+        $this->linkGradeThreeFiles($types);
+    }
+
+    private function linkGradeThreeFiles($types)
+    {
+        $usbPath = '/media/tele/ARISE1/Grade Three Complete';
+        $created = 0;
+
+        // Scan all files
+        $files = [];
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($usbPath),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            if (!$file->isFile()) continue;
+
+            $ext = strtolower($file->getExtension());
+            $type = null;
+
+            if ($ext === 'mp4') $type = 'Video';
+            elseif ($ext === 'html') $type = 'Interactive';
+            elseif ($ext === 'pdf') $type = 'PDF';
+
+            if ($type) {
+                $files[$file->getRealPath()] = $type;
+            }
+        }
+
+        // Link files to sub-strands
+        foreach ($files as $filePath => $contentTypeKey) {
+            if (ContentFile::where('file_path', $filePath)->exists()) {
+                continue;
+            }
+
+            $filename = basename($filePath);
+            $subStrand = $this->findGradeThreeSubStrand($filePath, $filename);
+
+            if (!$subStrand) {
+                continue;
+            }
+
+            ContentFile::create([
+                'title' => $this->cleanFileName($filename),
+                'file_path' => $filePath,
+                'content_type_id' => $types[$contentTypeKey]->id,
+                'contentable_id' => $subStrand->id,
+                'contentable_type' => SubStrand::class,
+            ]);
+
+            $created++;
+        }
+
+        $this->command->info("Linked $created Grade Three files");
+    }
+
+    private function findGradeThreeSubStrand($filePath, $filename)
+    {
+        $gradeThree = CurriculumType::where('name', 'Grade Three')->first();
+
+        // English files
+        if (strpos($filePath, '/English/') !== false || strpos(strtolower($filename), 'english') !== false) {
+            return $this->matchEnglishSubStrand($filename, $gradeThree);
+        }
+
+        // Math files
+        if (strpos($filePath, '/Math/') !== false) {
+            return $this->matchMathSubStrand($filename, $gradeThree);
+        }
+
+        // PDF mapping
+        if (strpos($filename, 'ENGLISH') !== false) {
+            $area = LearningArea::where('curriculum_type_id', $gradeThree->id)
+                ->where('name', 'English Language')->first();
+            if ($area) {
+                return SubStrand::whereHas('strand', function($q) use ($area) {
+                    $q->where('learning_area_id', $area->id);
+                })->first();
+            }
+        }
+
+        if (strpos($filename, 'KISWAHILI') !== false) {
+            $area = LearningArea::where('curriculum_type_id', $gradeThree->id)
+                ->where('name', 'Kiswahili Language')->first();
+            if ($area) {
+                return SubStrand::whereHas('strand', function($q) use ($area) {
+                    $q->where('learning_area_id', $area->id);
+                })->first();
+            }
+        }
+
+        return null;
+    }
+
+    private function matchEnglishSubStrand($filename, $gradeThree)
+    {
+        $area = LearningArea::where('curriculum_type_id', $gradeThree->id)
+            ->where('name', 'English Language')->first();
+
+        if (!$area) return null;
+
+        $name = strtolower($filename);
+
+        $mapping = [
+            'tense, verb, grammar' => 'Tenses',
+            'paragraph, writing' => 'Paragraph writing',
+            'letter' => 'Letter writing',
+            'comprehension' => 'Comprehension',
+            'vocabulary' => 'Vocabulary building',
+        ];
+
+        foreach ($mapping as $keywords => $subStrandName) {
+            $keywordArray = explode(', ', $keywords);
+            foreach ($keywordArray as $keyword) {
+                if (strpos($name, strtolower($keyword)) !== false) {
+                    $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                        $q->where('learning_area_id', $area->id);
+                    })->where('name', $subStrandName)->first();
+                    if ($sub) return $sub;
+                }
+            }
+        }
+
+        return SubStrand::whereHas('strand', function($q) use ($area) {
+            $q->where('learning_area_id', $area->id);
+        })->first();
+    }
+
+    private function matchMathSubStrand($filename, $gradeThree)
+    {
+        $area = LearningArea::where('curriculum_type_id', $gradeThree->id)
+            ->where('name', 'Mathematics')->first();
+
+        if (!$area) return null;
+
+        $name = strtolower($filename);
+
+        $mapping = [
+            'addition, adding, add' => 'Addition',
+            'subtraction, subtract, subtracting' => 'Subtraction',
+            'multiplication, multiply' => 'Multiplication',
+            'division, divide' => 'Division',
+            'number, counting, count' => 'Number recognition',
+            'shape, 2d, 3d' => '2D Shapes',
+            'length, metre, centimetre' => 'Length',
+            'mass, weight, heavy, light' => 'Mass',
+            'capacity, litre, volume' => 'Capacity',
+            'time, clock, hour, minute' => 'Time',
+            'money, shilling, coin' => 'Money',
+            'data' => 'Collecting data',
+        ];
+
+        foreach ($mapping as $keywords => $subStrandName) {
+            $keywordArray = explode(', ', $keywords);
+            foreach ($keywordArray as $keyword) {
+                if (strpos($name, strtolower($keyword)) !== false) {
+                    $sub = SubStrand::whereHas('strand', function($q) use ($area) {
+                        $q->where('learning_area_id', $area->id);
+                    })->where('name', $subStrandName)->first();
+                    if ($sub) return $sub;
+                }
+            }
+        }
+
+        return SubStrand::whereHas('strand', function($q) use ($area) {
+            $q->where('learning_area_id', $area->id);
+        })->first();
+    }
+
+    private function cleanFileName($filename)
+    {
+        $name = preg_replace('/\.(mp4|html|pdf)$/i', '', $filename);
+        $name = str_replace(['_', '-', '.'], ' ', $name);
+        $name = preg_replace('/\s+/', ' ', $name);
+        return trim($name);
+    }
+}

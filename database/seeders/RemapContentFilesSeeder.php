@@ -192,6 +192,29 @@ class RemapContentFilesSeeder extends Seeder
                     'calendar, time, month, day, week' => 'Time and Calendar',
                 ],
             ],
+            'Grade Three' => [
+                'English Language' => [
+                    'tense, verb, grammar' => 'Tenses',
+                    'paragraph, writing' => 'Paragraph writing',
+                    'letter' => 'Letter writing',
+                    'comprehension' => 'Comprehension',
+                    'vocabulary' => 'Vocabulary building',
+                ],
+                'Mathematics' => [
+                    'addition, adding, add' => 'Addition',
+                    'subtraction, subtract, subtracting' => 'Subtraction',
+                    'multiplication, multiply' => 'Multiplication',
+                    'division, divide' => 'Division',
+                    'number, counting, count' => 'Number recognition',
+                    'shape, 2d, 3d' => '2D Shapes',
+                    'length, metre, centimetre' => 'Length',
+                    'mass, weight, heavy, light' => 'Mass',
+                    'capacity, litre, volume' => 'Capacity',
+                    'time, clock, hour, minute' => 'Time',
+                    'money, shilling, coin' => 'Money',
+                    'data' => 'Collecting data',
+                ],
+            ],
         ];
     }
 }
