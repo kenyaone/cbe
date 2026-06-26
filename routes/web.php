@@ -7,6 +7,9 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\LearnerPortalController;
 use App\Http\Controllers\LearnerAuthController;
 
+// Login route alias for framework compatibility
+Route::redirect('/login', '/learn/login')->name('login');
+
 // Learner Authentication
 Route::middleware('guest:learner')->group(function () {
     Route::get('/learn/login', [LearnerAuthController::class, 'showLoginForm'])->name('learner.login');
@@ -16,7 +19,7 @@ Route::middleware('guest:learner')->group(function () {
 });
 
 // Learner Portal - Protected routes
-Route::middleware('auth:learner')->group(function () {
+Route::middleware('auth.learner')->group(function () {
     Route::get('/learn', [LearnerPortalController::class, 'dashboard'])->name('learner.dashboard');
     Route::get('/learn/grade/{gradeLevel}', [LearnerPortalController::class, 'gradeSubjects'])->name('learner.grade');
     Route::get('/learn/grade/{gradeLevel}/subject/{subjectId}', [LearnerPortalController::class, 'subjectTopics'])->name('learner.subject');
