@@ -235,6 +235,41 @@ class RemapContentFilesSeeder extends Seeder
                     'creative, arts, quiz' => 'Visual Arts',
                 ],
             ],
+            'Grade Five' => [
+                'English Language' => [
+                    'tense, continuous, past' => 'Tenses',
+                    'noun, nouns, singular, plural' => 'Parts of speech',
+                    'verb, verbs, action' => 'Parts of speech',
+                    'adjective, adverb' => 'Parts of speech',
+                    'preposition, pronoun' => 'Parts of speech',
+                    'punctuation, comma, period' => 'Punctuation',
+                    'comprehension, reading' => 'Comprehension',
+                    'vocabulary, word' => 'Vocabulary building',
+                    'writing, essay, paragraph' => 'Essay writing',
+                ],
+                'Mathematics' => [
+                    'fraction, numerator, denominator, improper, mixed' => 'Fractions',
+                    'decimal' => 'Decimals',
+                    'angle' => 'Angles',
+                    'place value, digit' => 'Place values',
+                    'area, perimeter' => 'Area and Perimeter',
+                    'addition, adding, add' => 'Addition',
+                    'subtraction, subtract, subtracting' => 'Subtraction',
+                    'multiplication, multiply, times' => 'Multiplication',
+                    'division, divide' => 'Division',
+                    'number, counting, count' => 'Number recognition',
+                    'shape, 2d, 3d' => '2D Shapes',
+                    'length, metre, centimetre' => 'Length',
+                    'mass, weight, heavy, light' => 'Mass',
+                    'capacity, litre, volume' => 'Capacity',
+                    'time, clock, hour, minute' => 'Time',
+                    'money, shilling, coin' => 'Money',
+                    'data, graph, chart' => 'Collecting data',
+                ],
+                'Science and Technology' => [
+                    'science, life, animal, plant, ecosystem' => 'Life sciences',
+                ],
+            ],
         ];
     }
 }
