@@ -12,7 +12,7 @@ class LinkGradeTenContentSeeder extends Seeder
 {
     public function run()
     {
-        $basePath = '/media/tele/CBE/Grade 10/Grade10-By-Subject-Clean';
+        $basePath = '/home/tele/cbe-platform/storage/app/media/grade-ten';
 
         if (!is_dir($basePath)) {
             $this->command->error("Grade 10 content directory not found: $basePath");
