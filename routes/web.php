@@ -9,6 +9,8 @@ use App\Http\Controllers\LearnerAuthController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminReportsController;
+use App\Http\Controllers\AdminContentUploadController;
 
 // Admin Authentication
 Route::middleware('guest:web')->group(function () {
@@ -37,6 +39,19 @@ Route::middleware('auth:web', 'is_admin')->group(function () {
 
     // Curriculum Management
     Route::get('/admin/curriculum', [AdminDashboardController::class, 'curriculum'])->name('admin.curriculum');
+
+    // Reports
+    Route::get('/admin/reports', [AdminReportsController::class, 'index'])->name('admin.reports');
+    Route::get('/admin/reports/learner-activity', [AdminReportsController::class, 'learnerActivity'])->name('admin.reports.learner-activity');
+    Route::get('/admin/reports/content-stats', [AdminReportsController::class, 'contentStats'])->name('admin.reports.content-stats');
+    Route::get('/admin/reports/platform-stats', [AdminReportsController::class, 'platformStats'])->name('admin.reports.platform-stats');
+
+    // Content Upload
+    Route::get('/admin/content/upload', [AdminContentUploadController::class, 'create'])->name('admin.content.upload');
+    Route::post('/admin/content/upload', [AdminContentUploadController::class, 'store'])->name('admin.content.upload.store');
+    Route::get('/admin/content/subjects/{grade}', [AdminContentUploadController::class, 'getSubjects']);
+    Route::get('/admin/content/strands/{subject}', [AdminContentUploadController::class, 'getStrands']);
+    Route::get('/admin/content/sub-strands/{strand}', [AdminContentUploadController::class, 'getSubStrands']);
 });
 
 // Login route alias for framework compatibility
