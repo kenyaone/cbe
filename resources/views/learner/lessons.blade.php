@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@if(isset($topic)){{ $topic->name }}@else{{ $subject->name }} - Lessons@endif - CBE Platform</title>
+    <title>{{ $subject->name }} - CBE Platform</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -65,38 +65,24 @@
             <a href="{{ route('learner.grade', $gradeLevel) }}">{{ $gradeLevel }}</a>
             <span>/</span>
             <a href="{{ route('learner.subject', [$gradeLevel, $subject->id]) }}">{{ $subject->name }}</a>
-            @if(isset($topic))
-            <span>/</span>
-            <span>{{ $topic->name }}</span>
-            @endif
         </div>
 
         <div class="header">
-            <h1>@if(isset($topic)){{ $topic->name }}@else{{ $subject->name }} - Lessons@endif</h1>
+            <h1>{{ $subject->name }} - Lessons</h1>
             <p>{{ $subject->name }} - {{ $gradeLevel }}</p>
         </div>
 
         <div class="lessons-list">
-            @foreach($lessons as $lesson)
-                @if(isset($topic))
-                    <a href="{{ route('learner.lesson', [$gradeLevel, $subject->id, $topic->id, $lesson->id]) }}" class="lesson-card">
-                        <div class="lesson-code">{{ $lesson->code }} - {{ $lesson->name }}</div>
-                        <h3>{{ $lesson->name }}</h3>
-                    </a>
-                @else
-                    <a href="{{ route('learner.lesson-simple', [$gradeLevel, $subject->id, $lesson->id]) }}" class="lesson-card">
-                        <div class="lesson-code">{{ $lesson->code }} - {{ $lesson->name }}</div>
-                        <h3>{{ $lesson->name }}</h3>
-                    </a>
-                @endif
-            @endforeach
-        </div>
-
-        @if($lessons->isEmpty())
-            <div style="text-align: center; padding: 40px; color: #999;">
-                <p>No lessons available yet.</p>
-            </div>
-        @endif
+            @forelse($lessons as $lesson)
+                <a href="{{ route('learner.lesson-simple', [$gradeLevel, $subject->id, $lesson->id]) }}" class="lesson-card">
+                    <div class="lesson-code">{{ $lesson->code }}</div>
+                    <h3>{{ $lesson->name }}</h3>
+                </a>
+            @empty
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <p>No lessons available yet.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 </body>
