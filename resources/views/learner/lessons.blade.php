@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $topic->name }} - CBE Platform</title>
+    <title>@if(isset($topic)){{ $topic->name }}@else{{ $subject->name }} - Lessons@endif - CBE Platform</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -94,9 +94,10 @@
 
         @if($lessons->isEmpty())
             <div style="text-align: center; padding: 40px; color: #999;">
-                <p>No lessons available for this topic yet.</p>
+                <p>No lessons available yet.</p>
             </div>
         @endif
+        </div>
     </div>
 </body>
 </html>
