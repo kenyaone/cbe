@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminReportsController;
 use App\Http\Controllers\AdminContentUploadController;
 use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\CloudDashboardController;
+use App\Http\Controllers\PublicDeviceMapController;
 
 // Admin Authentication
 Route::middleware('guest:web')->group(function () {
@@ -107,6 +108,12 @@ Route::middleware('auth.learner')->group(function () {
     Route::post('/learn/change-password', [LearnerAuthController::class, 'changePassword'])->name('learner.password.change');
     Route::post('/learn/logout', [LearnerAuthController::class, 'logout'])->name('learner.logout');
 });
+
+// Public Device Map - No authentication required
+Route::get('/devices', [PublicDeviceMapController::class, 'map'])->name('public.device-map');
+Route::get('/devices/api', [PublicDeviceMapController::class, 'api'])->name('public.devices-api');
+Route::get('/devices/status', [PublicDeviceMapController::class, 'status'])->name('public.device-status');
+Route::get('/devices/embed', [PublicDeviceMapController::class, 'embed'])->name('public.device-map-embed');
 
 // Admin/Curriculum Browser (original)
 Route::get('/', [CurriculumController::class, 'index'])->name('curriculum.index');
