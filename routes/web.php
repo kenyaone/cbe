@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminReportsController;
 use App\Http\Controllers\AdminContentUploadController;
 use App\Http\Controllers\TeacherDashboardController;
+use App\Http\Controllers\CloudDashboardController;
 
 // Admin Authentication
 Route::middleware('guest:web')->group(function () {
@@ -68,6 +69,14 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/teacher/reports', [TeacherDashboardController::class, 'reports'])->name('teacher.reports');
     Route::post('/teacher/logout', [TeacherDashboardController::class, 'logout'])->name('teacher.logout');
 });
+
+// Cloud Dashboard - Public (no auth required for MVP, can add auth later)
+Route::get('/cloud', [CloudDashboardController::class, 'index'])->name('cloud.dashboard');
+Route::get('/cloud/devices', [CloudDashboardController::class, 'devices'])->name('cloud.devices');
+Route::get('/cloud/device/{deviceId}', [CloudDashboardController::class, 'deviceDetail'])->name('cloud.device-detail');
+Route::get('/cloud/regions', [CloudDashboardController::class, 'regions'])->name('cloud.regions');
+Route::get('/cloud/reports', [CloudDashboardController::class, 'reports'])->name('cloud.reports');
+Route::get('/cloud/api', [CloudDashboardController::class, 'api'])->name('cloud.api');
 
 // Login route alias for framework compatibility
 Route::redirect('/login', '/learn/login')->name('login');
