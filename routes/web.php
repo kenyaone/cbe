@@ -6,6 +6,38 @@ use App\Http\Controllers\VideoStreamController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\LearnerPortalController;
 use App\Http\Controllers\LearnerAuthController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminUserController;
+
+// Admin Authentication
+Route::middleware('guest:web')->group(function () {
+    Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+});
+
+// Admin Dashboard - Protected Routes
+Route::middleware('auth:web', 'is_admin')->group(function () {
+    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+    // User Management
+    Route::get('/admin/users', [AdminDashboardController::class, 'users'])->name('admin.users');
+    Route::get('/admin/users/create', [AdminUserController::class, 'create'])->name('admin.users.create');
+    Route::post('/admin/users', [AdminUserController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+
+    // Learner Management
+    Route::get('/admin/learners', [AdminDashboardController::class, 'learners'])->name('admin.learners');
+
+    // Content Management
+    Route::get('/admin/content', [AdminDashboardController::class, 'content'])->name('admin.content');
+
+    // Curriculum Management
+    Route::get('/admin/curriculum', [AdminDashboardController::class, 'curriculum'])->name('admin.curriculum');
+});
 
 // Login route alias for framework compatibility
 Route::redirect('/login', '/learn/login')->name('login');
