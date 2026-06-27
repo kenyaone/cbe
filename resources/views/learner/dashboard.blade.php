@@ -63,9 +63,12 @@
             opacity: 1;
         }
         .icon {
-            font-size: 3em;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .icon svg { width: 48px; height: 48px; }
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -96,12 +99,12 @@
             <div></div>
             <form method="POST" action="{{ route('learner.logout') }}" style="margin: 0;">
                 @csrf
-                <button type="submit" class="logout-btn">🚪 Logout</button>
+                <button type="submit" class="logout-btn">Logout</button>
             </form>
         </div>
 
         <header>
-            <h1>📚 Choose Your Grade Level</h1>
+            <h1>Choose Your Grade Level</h1>
             <p>Select your grade to access your subjects and lessons</p>
         </header>
 
@@ -109,13 +112,12 @@
             @foreach($gradeLevels as $grade)
                 <a href="{{ route('learner.grade', $grade) }}" class="grade-card">
                     <div class="icon">
-                        @if($grade === 'PP1')
-                            👶
-                        @elseif($grade === 'PP2')
-                            🧒
-                        @else
-                            📖
-                        @endif
+                        {{-- Open book SVG --}}
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 10C24 10 14 6 6 8v28c8-2 18 2 18 2s10-4 18-2V8c-8-2-18 2-18 2z"
+                                fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linejoin="round"/>
+                            <line x1="24" y1="10" x2="24" y2="38" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+                        </svg>
                     </div>
                     <h2>{{ $grade }}</h2>
                     <p>
@@ -124,7 +126,7 @@
                         @elseif($grade === 'PP2')
                             Pre-Primary 2
                         @else
-                            {{ str_replace('Grade ', '', $grade) }}
+                            {{ str_replace(['Grade ', 'Form '], ['Grade ', 'Form '], $grade) }}
                         @endif
                     </p>
                 </a>
