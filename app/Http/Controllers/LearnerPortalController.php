@@ -20,7 +20,18 @@ class LearnerPortalController extends Controller
             ->orderByRaw("CASE
                 WHEN grade_level = 'PP1' THEN 1
                 WHEN grade_level = 'PP2' THEN 2
-                WHEN grade_level LIKE 'Grade%' THEN CAST(SUBSTR(grade_level, 7) AS INTEGER) + 2
+                WHEN grade_level = 'Grade One' THEN 3
+                WHEN grade_level = 'Grade Two' THEN 4
+                WHEN grade_level = 'Grade Three' THEN 5
+                WHEN grade_level = 'Grade Four' THEN 6
+                WHEN grade_level = 'Grade Five' THEN 7
+                WHEN grade_level = 'Grade Six' THEN 8
+                WHEN grade_level = 'Grade Seven' THEN 9
+                WHEN grade_level = 'Grade Eight' THEN 10
+                WHEN grade_level = 'Grade Nine' THEN 11
+                WHEN grade_level = 'Grade Ten' THEN 12
+                WHEN grade_level = 'Form Three' THEN 13
+                WHEN grade_level = 'Form Four' THEN 14
                 ELSE 100
             END")
             ->pluck('grade_level')
