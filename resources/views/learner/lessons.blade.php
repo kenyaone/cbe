@@ -74,6 +74,7 @@
         </div>
 
         <div class="lessons-list">
+            <!-- DEBUG: {{ $lessons->count() }} lessons -->
             @forelse($lessons as $lesson)
                 @if(isset($topic))
                     <a href="{{ route('learner.lesson', [$gradeLevel, $subject->id, $topic->id, $lesson->id]) }}" class="lesson-card">

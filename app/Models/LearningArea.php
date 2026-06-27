@@ -23,4 +23,9 @@ class LearningArea extends Model
     {
         return $this->hasMany(Strand::class);
     }
+
+    public function contentFiles()
+    {
+        return $this->morphMany(ContentFile::class, 'contentable');
+    }
 }

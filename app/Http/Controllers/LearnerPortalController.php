@@ -52,47 +52,48 @@ class LearnerPortalController extends Controller
         return view('learner.subjects', compact('gradeLevel', 'subjects'));
     }
 
-    // Subject clicked — always go directly to lessons list (no topics)
+    // Subject clicked — show all content grouped by type (Videos | PDFs | Interactive)
     public function subjectTopics($gradeLevel, $subjectId)
     {
-        return $this->subjectLessons($gradeLevel, $subjectId);
+        return $this->subjectContent($gradeLevel, $subjectId);
     }
 
     public function subjectLessons($gradeLevel, $subjectId)
     {
-        $subject = LearningArea::where('curriculum_type_id', $this->getCBE()->id)
-            ->where('grade_level', $gradeLevel)
-            ->findOrFail($subjectId);
-
-        // Get ALL content files for this subject across all strands/sub-strands
-        $lessons = SubStrand::whereHas('strand', function ($q) use ($subject) {
-            $q->where('learning_area_id', $subject->id);
-        })
-        ->whereHas('contentFiles')
-        ->with('contentFiles')
-        ->orderBy('order')
-        ->get();
-
-        return view('learner.lessons', compact('gradeLevel', 'subject', 'lessons'));
+        return $this->subjectContent($gradeLevel, $subjectId);
     }
 
-    // Lesson content — works for both simplified and topic-based
-    public function simplifiedLessonContent($gradeLevel, $subjectId, $lessonId)
+    private function subjectContent($gradeLevel, $subjectId)
     {
         $subject = LearningArea::where('curriculum_type_id', $this->getCBE()->id)
             ->where('grade_level', $gradeLevel)
             ->findOrFail($subjectId);
 
-        $lesson = SubStrand::whereHas('strand', function ($q) use ($subject) {
+        // Content linked directly to LearningArea (PDFs, etc.)
+        $directFiles = ContentFile::where('contentable_type', 'App\\Models\\LearningArea')
+            ->where('contentable_id', $subject->id)
+            ->get();
+
+        // Content linked via sub-strands (videos, interactives, etc.)
+        $subStrandIds = SubStrand::whereHas('strand', function ($q) use ($subject) {
             $q->where('learning_area_id', $subject->id);
-        })->findOrFail($lessonId);
+        })->pluck('id');
 
-        $contentFiles = $lesson->contentFiles()->get();
+        $subStrandFiles = ContentFile::where('contentable_type', 'App\\Models\\SubStrand')
+            ->whereIn('contentable_id', $subStrandIds)
+            ->get();
 
-        return view('learner.content-simple', compact('gradeLevel', 'subject', 'lesson', 'contentFiles'));
+        $all = $directFiles->merge($subStrandFiles);
+
+        // content_type_id: 1=PDF, 2=Video, 3=Text, 4=HTML, 5=Interactive
+        $videos  = $all->whereIn('content_type_id', [2])->sortBy('order')->values();
+        $pdfs    = $all->whereIn('content_type_id', [1, 3])->sortBy('order')->values();
+        $htmls   = $all->whereIn('content_type_id', [4, 5])->sortBy('order')->values();
+
+        return view('learner.subject-content', compact('gradeLevel', 'subject', 'videos', 'pdfs', 'htmls'));
     }
 
-    // Legacy topic-based routes still work but redirect to simplified
+    // Legacy routes — redirect to subject content
     public function topicLessons($gradeLevel, $subjectId, $topicId)
     {
         return redirect()->route('learner.subject', ['gradeLevel' => $gradeLevel, 'subjectId' => $subjectId]);
@@ -100,6 +101,11 @@ class LearnerPortalController extends Controller
 
     public function lessonContent($gradeLevel, $subjectId, $topicId, $lessonId)
     {
-        return $this->simplifiedLessonContent($gradeLevel, $subjectId, $lessonId);
+        return redirect()->route('learner.subject', ['gradeLevel' => $gradeLevel, 'subjectId' => $subjectId]);
+    }
+
+    public function simplifiedLessonContent($gradeLevel, $subjectId, $lessonId)
+    {
+        return redirect()->route('learner.subject', ['gradeLevel' => $gradeLevel, 'subjectId' => $subjectId]);
     }
 }
