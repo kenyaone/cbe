@@ -1,0 +1,258 @@
+================================================================================
+CBE PLATFORM - DEPLOYMENT QUICK REFERENCE
+================================================================================
+
+CURRENT SYSTEM:
+  URL: http://192.168.0.100:8001
+  Database: /home/tele/cbe-platform/database/database.sqlite
+  Location: /home/tele/cbe-platform
+
+TARGET SYSTEM (to be deployed):
+  IP/Hostname: [TO BE PROVIDED BY USER]
+  Username: ubuntu (or your SSH user)
+  Path: /home/ubuntu/cbe (or your preferred path)
+
+================================================================================
+OPTION A: FULLY AUTOMATED DEPLOYMENT
+================================================================================
+
+# From current machine, run one command:
+cd /home/tele/cbe-platform
+bash deploy.sh 192.168.0.101 ubuntu /home/ubuntu/cbe
+
+# Replace:
+#   192.168.0.101 with your TARGET IP
+#   ubuntu with your SSH username
+#   /home/ubuntu/cbe with target path
+
+# That's it! System will be running at http://192.168.0.101:8001
+
+================================================================================
+OPTION B: AUTOMATED + DATABASE MIGRATION (Import your current data)
+================================================================================
+
+# Step 1: Deploy application
+bash deploy.sh 192.168.0.101 ubuntu /home/ubuntu/cbe
+
+# Step 2: Migrate your database
+bash migrate-database.sh 192.168.0.101 ubuntu /home/ubuntu/cbe
+
+# Your data is now on the new server!
+
+================================================================================
+OPTION C: MANUAL DEPLOYMENT (Step-by-step)
+================================================================================
+
+# See QUICKSTART_DEPLOYMENT.md for detailed step-by-step instructions
+
+================================================================================
+TEST ACCESS AFTER DEPLOYMENT
+================================================================================
+
+Student Login:
+  URL: http://192.168.0.101:8001/learn/login
+  Username: student1
+  Password: student123
+
+Teacher Dashboard:
+  URL: http://192.168.0.101:8001/teacher/login
+  Username: teacher1
+  Password: teacher123
+
+Admin Dashboard:
+  URL: http://192.168.0.101:8001/admin/login
+  Username: admin1
+  Password: admin123
+
+Public Device Map:
+  URL: http://192.168.0.101:8001/devices
+  (No login required)
+
+API Endpoint:
+  URL: http://192.168.0.101:8001/devices/api
+  Returns: JSON with device data
+
+================================================================================
+QUICK VERIFICATION
+================================================================================
+
+# SSH into target machine
+ssh ubuntu@192.168.0.101
+
+# Check if running
+curl http://localhost:8001
+
+# Check database
+sqlite3 /home/ubuntu/cbe/database/database.sqlite "SELECT COUNT(*) FROM users;"
+
+# Check logs
+tail -50 /home/ubuntu/cbe/storage/logs/laravel.log
+
+# Check services
+sudo systemctl status nginx php8.2-fpm
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Cannot connect via SSH:
+  $ ping 192.168.0.101
+  $ ssh -v ubuntu@192.168.0.101
+
+Port 8001 already in use:
+  $ sudo lsof -i :8001
+  (Edit /etc/nginx/sites-available/cbe and change listen port)
+
+Permission denied:
+  $ sudo chown -R www-data:www-data /home/ubuntu/cbe
+  $ sudo chmod -R 775 /home/ubuntu/cbe/storage
+
+PHP-FPM not running:
+  $ sudo systemctl restart php8.2-fpm
+
+Nginx errors:
+  $ sudo nginx -t
+  $ sudo systemctl restart nginx
+
+Database errors:
+  $ sqlite3 /home/ubuntu/cbe/database/database.sqlite ".tables"
+  $ touch /home/ubuntu/cbe/database/database.sqlite
+
+Application errors:
+  $ tail -100 /home/ubuntu/cbe/storage/logs/laravel.log
+  $ php artisan cache:clear
+
+================================================================================
+DOCUMENTATION FILES
+================================================================================
+
+DEPLOYMENT_README.md
+  → Overview of entire deployment package
+  → Read this first
+
+QUICKSTART_DEPLOYMENT.md ⭐ RECOMMENDED
+  → 5-minute quick start
+  → Full manual step-by-step instructions
+  → Testing checklist
+
+DEPLOYMENT_GUIDE.md
+  → Detailed system requirements
+  → Complete step-by-step walkthrough
+  → Post-deployment verification
+  → Troubleshooting reference
+
+DEPLOYMENT_CHECKLIST.md
+  → Pre-deployment checklist
+  → Phase-by-phase verification
+  → Functional tests
+  → Common issues
+
+================================================================================
+SCRIPTS PROVIDED
+================================================================================
+
+deploy.sh
+  → Fully automated deployment
+  → Handles everything from SSH to Nginx setup
+  → Usage: bash deploy.sh <ip> <user> <path>
+
+migrate-database.sh
+  → Migrate database from current system
+  → Run AFTER deploy.sh completes
+  → Usage: bash migrate-database.sh <ip> <user> <path>
+
+================================================================================
+BEFORE YOU START
+================================================================================
+
+☐ Get target machine IP address
+☐ Verify SSH access: ssh ubuntu@TARGET_IP
+☐ Backup current database (optional)
+☐ Have target path ready (/home/ubuntu/cbe)
+☐ Have at least 50GB disk space on target
+☐ Have internet on target for package installation
+
+================================================================================
+DEPLOYMENT PROGRESS TRACKING
+================================================================================
+
+Target IP: _________________________
+SSH User: _________________________
+Target Path: _________________________
+Start Time: _________________________
+
+Deployment Method (choose one):
+  ☐ Option A: Automated only
+  ☐ Option B: Automated + Database
+  ☐ Option C: Manual
+
+Progress:
+  ☐ Pre-deployment checks complete
+  ☐ SSH connection verified
+  ☐ Deployment script running
+  ☐ Deployment completed
+  ☐ Database migrated (if Option B)
+  ☐ Access verified at http://TARGET_IP:8001
+  ☐ All tests passed
+
+End Time: _________________________
+Status: ☐ SUCCESS ☐ ISSUES
+
+Notes: __________________________________________________________________
+
+================================================================================
+NEXT STEPS AFTER DEPLOYMENT
+================================================================================
+
+1. Test the system:
+   - Student login: student1 / student123
+   - Teacher login: teacher1 / teacher123
+   - Admin login: admin1 / admin123
+
+2. Access public map:
+   - http://192.168.0.101:8001/devices
+
+3. Share map with stakeholders
+
+4. Set up local device syncing (if deploying remote devices):
+   - Device checkins to /api/device/initialize
+   - Sync uploads to /api/sync/upload
+
+5. Configure database backups:
+   - Daily backup script
+   - Cron job for automation
+
+6. Monitor cloud dashboard:
+   - /cloud for admin-only view
+   - Watch for device checkins
+
+7. (Optional) Set up SSL/HTTPS for production
+
+================================================================================
+SUPPORT
+================================================================================
+
+Quick diagnostics:
+  $ php artisan tinker
+  >>> config('app.url')
+  >>> DB::table('users')->count()
+  >>> DB::table('cloud_devices')->count()
+
+Full logs:
+  $ tail -100 /home/ubuntu/cbe/storage/logs/laravel.log
+
+Check database integrity:
+  $ sqlite3 /home/ubuntu/cbe/database/database.sqlite
+  sqlite> SELECT name FROM sqlite_master WHERE type='table';
+
+Reset if needed (WARNING - CLEARS ALL DATA):
+  $ php artisan migrate:reset
+  $ php artisan migrate
+  $ php artisan db:seed
+
+================================================================================
+READY? Run this command from /home/tele/cbe-platform:
+
+  bash deploy.sh YOUR_TARGET_IP ubuntu /home/ubuntu/cbe
+
+================================================================================
