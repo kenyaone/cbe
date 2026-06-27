@@ -65,21 +65,30 @@
             <a href="{{ route('learner.grade', $gradeLevel) }}">{{ $gradeLevel }}</a>
             <span>/</span>
             <a href="{{ route('learner.subject', [$gradeLevel, $subject->id]) }}">{{ $subject->name }}</a>
+            @if(isset($topic))
             <span>/</span>
             <span>{{ $topic->name }}</span>
+            @endif
         </div>
 
         <div class="header">
-            <h1>{{ $topic->name }}</h1>
+            <h1>@if(isset($topic)){{ $topic->name }}@else{{ $subject->name }} - Lessons@endif</h1>
             <p>{{ $subject->name }} - {{ $gradeLevel }}</p>
         </div>
 
         <div class="lessons-list">
             @foreach($lessons as $lesson)
-                <a href="{{ route('learner.lesson', [$gradeLevel, $subject->id, $topic->id, $lesson->id]) }}" class="lesson-card">
-                    <div class="lesson-code">{{ $lesson->code }} - {{ $lesson->name }}</div>
-                    <h3>{{ $lesson->name }}</h3>
-                </a>
+                @if(isset($topic))
+                    <a href="{{ route('learner.lesson', [$gradeLevel, $subject->id, $topic->id, $lesson->id]) }}" class="lesson-card">
+                        <div class="lesson-code">{{ $lesson->code }} - {{ $lesson->name }}</div>
+                        <h3>{{ $lesson->name }}</h3>
+                    </a>
+                @else
+                    <a href="{{ route('learner.lesson-simple', [$gradeLevel, $subject->id, $lesson->id]) }}" class="lesson-card">
+                        <div class="lesson-code">{{ $lesson->code }} - {{ $lesson->name }}</div>
+                        <h3>{{ $lesson->name }}</h3>
+                    </a>
+                @endif
             @endforeach
         </div>
 

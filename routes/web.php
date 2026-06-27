@@ -72,6 +72,10 @@ Route::middleware('auth.learner')->group(function () {
     Route::get('/learn/grade/{gradeLevel}/subject/{subjectId}', [LearnerPortalController::class, 'subjectTopics'])->name('learner.subject');
     Route::get('/learn/grade/{gradeLevel}/subject/{subjectId}/topic/{topicId}', [LearnerPortalController::class, 'topicLessons'])->name('learner.topic');
     Route::get('/learn/grade/{gradeLevel}/subject/{subjectId}/topic/{topicId}/lesson/{lessonId}', [LearnerPortalController::class, 'lessonContent'])->name('learner.lesson');
+
+    // Simplified routes (no topics, direct to lessons)
+    Route::get('/learn/grade/{gradeLevel}/subject/{subjectId}/lesson/{lessonId}', [LearnerPortalController::class, 'simplifiedLessonContent'])->name('learner.lesson-simple');
+
     Route::get('/learn/profile', [LearnerAuthController::class, 'profile'])->name('learner.profile');
     Route::post('/learn/profile', [LearnerAuthController::class, 'updateProfile'])->name('learner.profile.update');
     Route::post('/learn/change-password', [LearnerAuthController::class, 'changePassword'])->name('learner.password.change');

@@ -61,7 +61,16 @@ class LearnerPortalController extends Controller
             ->where('grade_level', $gradeLevel)
             ->findOrFail($subjectId);
 
+        // Check if this is a simplified subject (has "Lessons" strand)
+        $isSimplified = $subject->strands()->where('name', 'Lessons')->exists();
+
+        if ($isSimplified) {
+            // Skip topics, go directly to lessons
+            return $this->subjectLessons($gradeLevel, $subjectId);
+        }
+
         $topics = Strand::where('learning_area_id', $subject->id)
+            ->where('name', '!=', 'PDF Resources') // Hide PDF section from topics
             ->orderBy('order')
             ->get();
 
@@ -86,6 +95,24 @@ class LearnerPortalController extends Controller
         return view('learner.lessons', compact('gradeLevel', 'subject', 'topic', 'lessons'));
     }
 
+    public function subjectLessons($gradeLevel, $subjectId)
+    {
+        $cbeCurriculum = CurriculumType::where('name', 'CBE')->first();
+
+        $subject = LearningArea::where('curriculum_type_id', $cbeCurriculum->id)
+            ->where('grade_level', $gradeLevel)
+            ->findOrFail($subjectId);
+
+        // For simplified grades, get SubStrands directly from subject's Strands
+        // (skipping the topic/strand layer for simplified curricula)
+        $lessons = SubStrand::whereHas('strand', function($q) use ($subject) {
+            $q->where('learning_area_id', $subject->id)
+              ->where('name', 'Lessons'); // Simplified grades have a "Lessons" strand
+        })->orderBy('order')->get();
+
+        return view('learner.lessons', compact('gradeLevel', 'subject', 'lessons'));
+    }
+
     public function lessonContent($gradeLevel, $subjectId, $topicId, $lessonId)
     {
         $cbeCurriculum = CurriculumType::where('name', 'CBE')->first();
@@ -103,5 +130,23 @@ class LearnerPortalController extends Controller
         $contentFiles = $lesson->contentFiles()->get();
 
         return view('learner.content', compact('gradeLevel', 'subject', 'topic', 'lesson', 'contentFiles'));
+    }
+
+    public function simplifiedLessonContent($gradeLevel, $subjectId, $lessonId)
+    {
+        $cbeCurriculum = CurriculumType::where('name', 'CBE')->first();
+
+        $subject = LearningArea::where('curriculum_type_id', $cbeCurriculum->id)
+            ->where('grade_level', $gradeLevel)
+            ->findOrFail($subjectId);
+
+        $lesson = SubStrand::whereHas('strand', function($q) use ($subject) {
+            $q->where('learning_area_id', $subject->id)
+              ->where('name', 'Lessons');
+        })->findOrFail($lessonId);
+
+        $contentFiles = $lesson->contentFiles()->get();
+
+        return view('learner.content-simple', compact('gradeLevel', 'subject', 'lesson', 'contentFiles'));
     }
 }
