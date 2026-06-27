@@ -123,6 +123,8 @@
     <div class="navbar">
         <h1>🔐 Admin Dashboard</h1>
         <div>
+            <a href="{{ route('admin.reports') }}">Reports</a>
+            <a href="{{ route('admin.content.upload') }}">Upload</a>
             <a href="{{ route('admin.users') }}">Users</a>
             <a href="{{ route('admin.learners') }}">Learners</a>
             <a href="{{ route('admin.content') }}">Content</a>
@@ -181,6 +183,16 @@
                 <div class="menu-icon">📖</div>
                 <div class="menu-title">Curriculum</div>
                 <div class="menu-desc">View curriculum structure</div>
+            </a>
+            <a href="{{ route('admin.reports') }}" class="menu-card">
+                <div class="menu-icon">📊</div>
+                <div class="menu-title">Reports</div>
+                <div class="menu-desc">View analytics and statistics</div>
+            </a>
+            <a href="{{ route('admin.content.upload') }}" class="menu-card">
+                <div class="menu-icon">📤</div>
+                <div class="menu-title">Upload Content</div>
+                <div class="menu-desc">Add new content files</div>
             </a>
         </div>
 
