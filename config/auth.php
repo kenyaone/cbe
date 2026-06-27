@@ -74,7 +74,7 @@ return [
 
         'learners' => [
             'driver' => 'eloquent',
-            'model' => 'App\Models\Learner',
+            'model' => User::class,
         ],
 
         // 'users' => [

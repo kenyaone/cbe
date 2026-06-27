@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Learner;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -41,25 +41,19 @@ class LearnerAuthController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:learners',
-            'email' => 'required|string|email|max:255|unique:learners',
+            'username' => 'required|string|max:50|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'grade_level' => 'required|string',
-            'admission_number' => 'nullable|string|max:50',
-            'phone' => 'nullable|string|max:20',
         ]);
 
-        $learner = Learner::create([
+        $user = User::create([
             'name' => $validated['name'],
             'username' => $validated['username'],
-            'email' => $validated['email'],
+            'email' => $validated['username'] . '@learner.local',
             'password' => Hash::make($validated['password']),
-            'grade_level' => $validated['grade_level'],
-            'admission_number' => $validated['admission_number'] ?? null,
-            'phone' => $validated['phone'] ?? null,
+            'role' => 'learner',
         ]);
 
-        Auth::guard('learner')->login($learner);
+        Auth::guard('learner')->login($user);
 
         return redirect()->route('learner.dashboard');
     }
@@ -84,10 +78,7 @@ class LearnerAuthController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:learners,username,' . Auth::guard('learner')->id(),
-            'email' => 'required|string|email|max:255|unique:learners,email,' . Auth::guard('learner')->id(),
-            'phone' => 'nullable|string|max:20',
-            'grade_level' => 'required|string',
+            'username' => 'required|string|max:50|unique:users,username,' . Auth::guard('learner')->id(),
         ]);
 
         Auth::guard('learner')->user()->update($validated);

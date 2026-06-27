@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminReportsController;
 use App\Http\Controllers\AdminContentUploadController;
+use App\Http\Controllers\TeacherDashboardController;
 
 // Admin Authentication
 Route::middleware('guest:web')->group(function () {
@@ -52,6 +53,20 @@ Route::middleware('auth:web', 'is_admin')->group(function () {
     Route::get('/admin/content/subjects/{grade}', [AdminContentUploadController::class, 'getSubjects']);
     Route::get('/admin/content/strands/{subject}', [AdminContentUploadController::class, 'getStrands']);
     Route::get('/admin/content/sub-strands/{strand}', [AdminContentUploadController::class, 'getSubStrands']);
+});
+
+// Teacher Authentication
+Route::middleware('guest:web')->group(function () {
+    Route::get('/teacher/login', [TeacherDashboardController::class, 'showLoginForm'])->name('teacher.login');
+    Route::post('/teacher/login', [TeacherDashboardController::class, 'teacherLogin'])->name('teacher.login.submit');
+});
+
+// Teacher Dashboard - Protected Routes
+Route::middleware('auth:web')->group(function () {
+    Route::get('/teacher', [TeacherDashboardController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::get('/teacher/learner-progress', [TeacherDashboardController::class, 'learnerProgress'])->name('teacher.learner-progress');
+    Route::get('/teacher/reports', [TeacherDashboardController::class, 'reports'])->name('teacher.reports');
+    Route::post('/teacher/logout', [TeacherDashboardController::class, 'logout'])->name('teacher.logout');
 });
 
 // Login route alias for framework compatibility

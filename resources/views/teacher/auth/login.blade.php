@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learner Registration - CBE Platform</title>
+    <title>Teacher Login - CBE Platform</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -15,12 +15,12 @@
             align-items: center;
             padding: 20px;
         }
-        .register-container {
+        .login-container {
             background: white;
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             padding: 40px;
         }
         .logo {
@@ -41,24 +41,24 @@
             font-size: 0.9em;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             color: #333;
             font-weight: 600;
             font-size: 0.9em;
         }
-        input, select {
+        input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 6px;
-            font-size: 0.95em;
+            font-size: 1em;
             transition: border-color 0.3s;
         }
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -74,7 +74,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 10px;
         }
         button:hover {
             transform: translateY(-2px);
@@ -85,17 +84,19 @@
             font-size: 0.85em;
             margin-top: 5px;
         }
-        .login-link {
+        .login-links {
             text-align: center;
             margin-top: 20px;
             color: #666;
         }
-        .login-link a {
+        .login-links a {
             color: #667eea;
             text-decoration: none;
             font-weight: 600;
+            display: block;
+            margin-top: 10px;
         }
-        .login-link a:hover {
+        .login-links a:hover {
             text-decoration: underline;
         }
         .errors {
@@ -106,23 +107,13 @@
             margin-bottom: 20px;
             border-left: 4px solid #c33;
         }
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        @media (max-width: 500px) {
-            .row {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="register-container">
-        <div class="logo">📚</div>
-        <h1>Create Your Account</h1>
-        <p class="subtitle">CBE Platform - Join Your Class</p>
+    <div class="login-container">
+        <div class="logo">👨‍🏫</div>
+        <h1>Teacher Login</h1>
+        <p class="subtitle">CBE Platform - Dashboard Access</p>
 
         @if ($errors->any())
             <div class="errors">
@@ -132,20 +123,12 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('learner.register.submit') }}">
+        <form method="POST" action="{{ route('teacher.login.submit') }}">
             @csrf
 
             <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
-                @error('name')
-                    <div class="error">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="Choose your login username" required>
+                <input type="text" id="username" name="username" value="{{ old('username') }}" required autofocus>
                 @error('username')
                     <div class="error">{{ $message }}</div>
                 @enderror
@@ -159,16 +142,12 @@
                 @enderror
             </div>
 
-            <div class="form-group">
-                <label for="password_confirmation">Confirm Password</label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required>
-            </div>
-
-            <button type="submit">Create Account</button>
+            <button type="submit">Login to Dashboard</button>
         </form>
 
-        <div class="login-link">
-            Already have an account? <a href="{{ route('learner.login') }}">Login here</a>
+        <div class="login-links">
+            <a href="{{ route('learner.login') }}">← Learner Login</a>
+            <a href="{{ route('admin.login') }}">← Admin Login</a>
         </div>
     </div>
 </body>
