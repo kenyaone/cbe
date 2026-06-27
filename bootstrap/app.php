@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.learner' => \App\Http\Middleware\CheckLearnerAuth::class,
             'is_admin' => \App\Http\Middleware\IsAdmin::class,
+            'cloud_auth' => \App\Http\Middleware\CloudAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

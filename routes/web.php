@@ -70,13 +70,15 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/teacher/logout', [TeacherDashboardController::class, 'logout'])->name('teacher.logout');
 });
 
-// Cloud Dashboard - Public (no auth required for MVP, can add auth later)
-Route::get('/cloud', [CloudDashboardController::class, 'index'])->name('cloud.dashboard');
-Route::get('/cloud/devices', [CloudDashboardController::class, 'devices'])->name('cloud.devices');
-Route::get('/cloud/device/{deviceId}', [CloudDashboardController::class, 'deviceDetail'])->name('cloud.device-detail');
-Route::get('/cloud/regions', [CloudDashboardController::class, 'regions'])->name('cloud.regions');
-Route::get('/cloud/reports', [CloudDashboardController::class, 'reports'])->name('cloud.reports');
-Route::get('/cloud/api', [CloudDashboardController::class, 'api'])->name('cloud.api');
+// Cloud Dashboard - Admin only
+Route::middleware('cloud_auth')->group(function () {
+    Route::get('/cloud', [CloudDashboardController::class, 'index'])->name('cloud.dashboard');
+    Route::get('/cloud/devices', [CloudDashboardController::class, 'devices'])->name('cloud.devices');
+    Route::get('/cloud/device/{deviceId}', [CloudDashboardController::class, 'deviceDetail'])->name('cloud.device-detail');
+    Route::get('/cloud/regions', [CloudDashboardController::class, 'regions'])->name('cloud.regions');
+    Route::get('/cloud/reports', [CloudDashboardController::class, 'reports'])->name('cloud.reports');
+    Route::get('/cloud/api', [CloudDashboardController::class, 'api'])->name('cloud.api');
+});
 
 // Login route alias for framework compatibility
 Route::redirect('/login', '/learn/login')->name('login');
