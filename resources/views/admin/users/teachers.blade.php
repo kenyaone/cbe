@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Learners - CBE Platform</title>
+    <title>Manage Teachers - Admin</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -56,6 +56,22 @@
             align-items: center;
             margin-bottom: 30px;
         }
+        .create-btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .create-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
 
         .alert {
             padding: 15px;
@@ -66,11 +82,6 @@
             background: #d4edda;
             color: #155724;
             border-left: 4px solid #155724;
-        }
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border-left: 4px solid #0c5460;
         }
 
         table {
@@ -151,11 +162,11 @@
 </head>
 <body>
     <div class="header">
-        <h1>📚 Manage Learners</h1>
+        <h1>👨‍🏫 Manage Teachers</h1>
         <div class="header-nav">
             <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            <a href="{{ route('admin.teachers') }}">Teachers</a>
             <a href="{{ route('admin.admins') }}">Admins</a>
+            <a href="{{ route('admin.learners') }}">Learners</a>
             <form method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
                 @csrf
                 <button type="submit" class="logout-btn">Logout</button>
@@ -164,26 +175,18 @@
     </div>
 
     <div class="container">
-        @if(session('reset_password'))
-            <div class="alert alert-info">
-                <strong>✅ Password Reset Successful</strong><br>
-                User: <strong>{{ session('reset_password.user_name') }}</strong> ({{ session('reset_password.role') }})<br>
-                Temporary Password: <code style="background: #e5e5e5; padding: 2px 6px; border-radius: 3px;">{{ session('reset_password.temp_password') }}</code><br>
-                <small>Share this temporary password with the user. They should change it after first login.</small>
-            </div>
-        @endif
-
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
         <div class="controls">
-            <h2 style="font-size: 1.3em;">Learners ({{ $learners->total() }})</h2>
+            <h2 style="font-size: 1.3em;">Teachers ({{ $teachers->total() }})</h2>
+            <a href="{{ route('admin.teachers.create') }}" class="create-btn">+ Add New Teacher</a>
         </div>
 
-        @if($learners->isEmpty())
+        @if($teachers->isEmpty())
             <div class="empty">
-                <p>No learners found yet.</p>
+                <p>No teachers found. <a href="{{ route('admin.teachers.create') }}" style="color: #667eea;">Create one →</a></p>
             </div>
         @else
             <table>
@@ -191,26 +194,24 @@
                     <tr>
                         <th>Name</th>
                         <th>Username</th>
-                        <th>Grade Level</th>
-                        <th>Last Login</th>
+                        <th>Email</th>
                         <th>Registered</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($learners as $learner)
+                    @foreach($teachers as $teacher)
                         <tr>
-                            <td><strong>{{ $learner->name }}</strong></td>
-                            <td>{{ $learner->username }}</td>
-                            <td>{{ $learner->grade_level ?? '—' }}</td>
-                            <td>{{ $learner->last_login_at ? $learner->last_login_at->format('M d, Y H:i') : 'Never' }}</td>
-                            <td>{{ $learner->created_at->format('M d, Y') }}</td>
+                            <td><strong>{{ $teacher->name }}</strong></td>
+                            <td>{{ $teacher->username }}</td>
+                            <td>{{ $teacher->email }}</td>
+                            <td>{{ $teacher->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="actions">
-                                    <form method="POST" action="{{ route('admin.learners.reset-password', $learner->id) }}" style="display: inline;">
+                                    <form method="POST" action="{{ route('admin.teachers.reset-password', $teacher->id) }}" style="display: inline;">
                                         @csrf
-                                        <button type="submit" class="btn-small btn-reset" onclick="return confirm('Reset password for {{ $learner->name }}?')">
-                                            🔐 Reset
+                                        <button type="submit" class="btn-small btn-reset" onclick="return confirm('Reset password for {{ $teacher->name }}?')">
+                                            🔐 Reset Password
                                         </button>
                                     </form>
                                 </div>
@@ -221,7 +222,7 @@
             </table>
 
             <div class="pagination">
-                {{ $learners->links() }}
+                {{ $teachers->links() }}
             </div>
         @endif
     </div>

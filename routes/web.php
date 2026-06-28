@@ -36,6 +36,17 @@ Route::middleware('auth:web', 'is_admin')->group(function () {
 
     // Learner Management
     Route::get('/admin/learners', [AdminDashboardController::class, 'learners'])->name('admin.learners');
+    Route::post('/admin/learners/{userId}/reset-password', [AdminDashboardController::class, 'confirmReset'])->name('admin.learners.reset-password');
+
+    // Teacher Management
+    Route::get('/admin/teachers', [AdminDashboardController::class, 'teachers'])->name('admin.teachers');
+    Route::get('/admin/teachers/create', [AdminDashboardController::class, 'createTeacher'])->name('admin.teachers.create');
+    Route::post('/admin/teachers', [AdminDashboardController::class, 'storeTeacher'])->name('admin.teachers.store');
+    Route::post('/admin/teachers/{userId}/reset-password', [AdminDashboardController::class, 'confirmReset'])->name('admin.teachers.reset-password');
+
+    // Admin Management
+    Route::get('/admin/admins', [AdminDashboardController::class, 'admins'])->name('admin.admins');
+    Route::post('/admin/admins/{userId}/reset-password', [AdminDashboardController::class, 'confirmReset'])->name('admin.admins.reset-password');
 
     // Content Management
     Route::get('/admin/content', [AdminDashboardController::class, 'content'])->name('admin.content');
