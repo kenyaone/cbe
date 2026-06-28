@@ -66,6 +66,10 @@ Route::middleware('guest:web')->group(function () {
 // Teacher Dashboard - Protected Routes
 Route::middleware('auth:web')->group(function () {
     Route::get('/teacher', [TeacherDashboardController::class, 'dashboard'])->name('teacher.dashboard');
+    Route::get('/teacher/analytics', [TeacherDashboardController::class, 'analytics'])->name('teacher.analytics');
+    Route::get('/teacher/learner-profiles', [TeacherDashboardController::class, 'learnerProfiles'])->name('teacher.learner-profiles');
+    Route::get('/teacher/learner/{learnerId}', [TeacherDashboardController::class, 'learnerDetail'])->name('teacher.learner-detail');
+    Route::get('/teacher/content-analytics', [TeacherDashboardController::class, 'contentAnalytics'])->name('teacher.content-analytics');
     Route::get('/teacher/learner-progress', [TeacherDashboardController::class, 'learnerProgress'])->name('teacher.learner-progress');
     Route::get('/teacher/reports', [TeacherDashboardController::class, 'reports'])->name('teacher.reports');
     Route::post('/teacher/logout', [TeacherDashboardController::class, 'logout'])->name('teacher.logout');
