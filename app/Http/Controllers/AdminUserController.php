@@ -18,12 +18,12 @@ class AdminUserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:50|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
         $validated['role'] = 'admin';
+        $validated['email'] = 'admin_' . time() . '@cbe.local';
 
         User::create($validated);
 
@@ -39,7 +39,6 @@ class AdminUserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
         ]);
 

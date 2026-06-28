@@ -139,11 +139,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
-                </div>
-
-                <div class="form-group">
                     <label for="password">New Password (Optional)</label>
                     <input type="password" id="password" name="password">
                 </div>

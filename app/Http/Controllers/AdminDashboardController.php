@@ -72,19 +72,18 @@ class AdminDashboardController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|unique:users|max:255',
-            'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         User::create([
             'name' => $validated['name'],
             'username' => $validated['username'],
-            'email' => $validated['email'],
+            'email' => 'teacher_' . time() . '@cbe.local',
             'password' => Hash::make($validated['password']),
             'role' => 'teacher',
         ]);
 
-        return redirect()->route('admin.users')->with('success', 'Teacher account created successfully');
+        return redirect()->route('admin.teachers')->with('success', 'Teacher account created successfully');
     }
 
     public function resetPassword(Request $request, $userId)
