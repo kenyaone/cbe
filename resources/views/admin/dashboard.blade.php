@@ -123,11 +123,11 @@
     <div class="navbar">
         <h1>🔐 Admin Dashboard</h1>
         <div>
-            <a href="{{ route('admin.reports') }}">Reports</a>
-            <a href="{{ route('admin.content.upload') }}">Upload</a>
-            <a href="{{ route('admin.users') }}">Users</a>
+            <a href="{{ route('admin.teachers') }}">Teachers</a>
+            <a href="{{ route('admin.admins') }}">Admins</a>
             <a href="{{ route('admin.learners') }}">Learners</a>
-            <a href="{{ route('admin.content') }}">Content</a>
+            <a href="{{ route('admin.content.upload') }}">Upload</a>
+            <a href="{{ route('admin.reports') }}">Reports</a>
             <form method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
                 @csrf
                 <button type="submit" style="background: none; border: none; color: white; cursor: pointer; padding: 8px 12px; border-radius: 4px; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='none'">Logout</button>
@@ -164,10 +164,15 @@
         <h2 style="margin: 30px 0 20px;">Management</h2>
 
         <div class="menu-grid">
-            <a href="{{ route('admin.users') }}" class="menu-card">
-                <div class="menu-icon">👥</div>
-                <div class="menu-title">Admin Users</div>
-                <div class="menu-desc">Create and manage admin accounts</div>
+            <a href="{{ route('admin.admins') }}" class="menu-card">
+                <div class="menu-icon">🔐</div>
+                <div class="menu-title">Admin Accounts</div>
+                <div class="menu-desc">View and reset admin accounts</div>
+            </a>
+            <a href="{{ route('admin.teachers') }}" class="menu-card">
+                <div class="menu-icon">👨‍🏫</div>
+                <div class="menu-title">Teachers</div>
+                <div class="menu-desc">Create and manage teacher accounts</div>
             </a>
             <a href="{{ route('admin.learners') }}" class="menu-card">
                 <div class="menu-icon">📚</div>
