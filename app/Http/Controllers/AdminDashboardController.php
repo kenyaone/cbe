@@ -13,7 +13,7 @@ class AdminDashboardController extends Controller
     {
         $stats = [
             'total_admins' => User::where('role', 'admin')->count(),
-            'total_learners' => Learner::count(),
+            'total_learners' => User::where('role', 'learner')->count(),
             'total_content_files' => ContentFile::count(),
             'total_grades' => LearningArea::select('grade_level')->distinct()->count(),
             'total_subjects' => LearningArea::count(),
@@ -22,7 +22,7 @@ class AdminDashboardController extends Controller
                 ->selectRaw('content_types.name, count(*) as count')
                 ->pluck('count', 'name')
                 ->toArray(),
-            'recent_learners' => Learner::orderBy('created_at', 'desc')->limit(5)->get(),
+            'recent_learners' => User::where('role', 'learner')->orderBy('created_at', 'desc')->limit(5)->get(),
         ];
 
         return view('admin.dashboard', $stats);
@@ -36,7 +36,7 @@ class AdminDashboardController extends Controller
 
     public function learners()
     {
-        $learners = Learner::paginate(15);
+        $learners = User::where('role', 'learner')->paginate(15);
         return view('admin.learners.index', compact('learners'));
     }
 
