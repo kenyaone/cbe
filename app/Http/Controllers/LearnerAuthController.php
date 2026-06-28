@@ -42,12 +42,14 @@ class LearnerAuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:50|unique:users',
+            'grade_level' => 'required|string',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'username' => $validated['username'],
+            'grade_level' => $validated['grade_level'],
             'email' => $validated['username'] . '@learner.local',
             'password' => Hash::make($validated['password']),
             'role' => 'learner',

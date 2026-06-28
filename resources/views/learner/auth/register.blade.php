@@ -152,6 +152,30 @@
             </div>
 
             <div class="form-group">
+                <label for="grade_level">Grade Level</label>
+                <select id="grade_level" name="grade_level" required>
+                    <option value="">Select your grade</option>
+                    <option value="PP1">PP1 - Pre-Primary 1</option>
+                    <option value="PP2">PP2 - Pre-Primary 2</option>
+                    <option value="Grade One">Grade One</option>
+                    <option value="Grade Two">Grade Two</option>
+                    <option value="Grade Three">Grade Three</option>
+                    <option value="Grade Four">Grade Four</option>
+                    <option value="Grade Five">Grade Five</option>
+                    <option value="Grade Six">Grade Six</option>
+                    <option value="Grade Seven">Grade Seven</option>
+                    <option value="Grade Eight">Grade Eight</option>
+                    <option value="Grade Nine">Grade Nine</option>
+                    <option value="Grade Ten">Grade Ten</option>
+                    <option value="Form Three">Form Three</option>
+                    <option value="Form Four">Form Four</option>
+                </select>
+                @error('grade_level')
+                    <div class="error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                 @error('password')
